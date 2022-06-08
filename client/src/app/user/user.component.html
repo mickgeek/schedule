@@ -1,0 +1,63 @@
+<div class="user">
+
+  <h1>Users</h1>
+
+  <table mat-table [dataSource]="users">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>Id.</th>
+      <td mat-cell *matCellDef="let cell">{{ cell.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let cell">{{ cell.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef>Role</th>
+      <td mat-cell *matCellDef="let cell">{{ convertRole(cell.role) }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="added_at">
+      <th mat-header-cell *matHeaderCellDef>Added At</th>
+      <td mat-cell *matCellDef="let cell">{{ cell.added_at }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="updated_at">
+      <th mat-header-cell *matHeaderCellDef>Updated At</th>
+      <td mat-cell *matCellDef="let cell">{{ cell.updated_at !== null ? cell.updated_at : '(not set)' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let cell">
+        <button mat-icon-button (click)="getUserById(cell.id)">
+          <mat-icon>notes</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="6">No data</td>
+    </tr>
+
+    <tr mat-header-row *matHeaderRowDef="columnDef"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnDef;"></tr>
+  </table>
+
+  <div>
+    <ng-container *ngIf="existEntityShown">
+      <h2>Existed Entity</h2>
+
+      <ul>
+        <li>Id.: {{ user.id }}</li>
+        <li>Name: {{ user.name }}</li>
+        <li>Role: {{ convertRole(user.role) }}</li>
+        <li>Added at: {{ user.added_at }}</li>
+        <li>Updated at: {{ user.updated_at !== null ? user.updated_at : '(not set)' }}</li>
+      </ul>
+    </ng-container>
+  </div>
+</div>
+
+<router-outlet></router-outlet>

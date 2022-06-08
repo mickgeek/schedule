@@ -1,0 +1,157 @@
+<div class="task">
+
+  <h1>Tasks</h1>
+
+  <nav>
+    <span class="years">
+      <ng-container *ngFor="let year of dates.years">
+        <button mat-button
+          (click)="extractMonths(year)"
+          class="{{ selectedDate.year === year ? 'mat-button-disabled' : '' }}"
+        >{{ year }}</button>
+      </ng-container>
+    </span>
+
+    <mat-divider></mat-divider>
+
+    <span class="months">
+      <ng-container *ngFor="let month of dates.months">
+        <button mat-button
+          (click)="extractDays(selectedDate.year, month)"
+          class="{{ selectedDate.month === month ? 'mat-button-disabled' : '' }}"
+        >{{ convertMonth(month) }}</button>
+      </ng-container>
+    </span>
+
+    <mat-divider></mat-divider>
+
+    <span class="days {{ selectedDate.month === null ? 'block-hidden' : '' }}">
+      <ng-container *ngFor="let day of dates.days">
+        <button mat-button
+          (click)="getTasks(selectedDate.year, selectedDate.month, day)"
+          class="{{ selectedDate.day === day ? 'mat-button-disabled' : '' }}"
+        >{{ day }}</button>
+      </ng-container>
+    </span>
+  </nav>
+
+  <div>
+    <h2>Entities</h2>
+
+    <table mat-table [dataSource]="tasks">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>Id.</th>
+        <td mat-cell *matCellDef="let cell">{{ cell.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let cell">{{ cell.description }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="planned_at">
+        <th mat-header-cell *matHeaderCellDef>Planned at</th>
+        <td mat-cell *matCellDef="let cell">{{ cell.planned_at }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let cell"><b>{{ convertStatus(cell.status) }}</b></td>
+      </ng-container>
+
+      <ng-container matColumnDef="added_at">
+        <th mat-header-cell *matHeaderCellDef>Added at</th>
+        <td mat-cell *matCellDef="let cell">{{ cell.added_at }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="updated_at">
+        <th mat-header-cell *matHeaderCellDef>Updated at</th>
+        <td mat-cell *matCellDef="let cell">{{ cell.updated_at !== null ? cell.updated_at : '(not set)' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let cell">
+          <button mat-icon-button (click)="showExistEntityForm(cell.id, cell.description, cell.status)">
+            <mat-icon>edit_note</mat-icon>
+          </button>
+
+          <button mat-icon-button (click)="deleteTask(cell.id)">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="7">No data</td>
+      </tr>
+
+      <tr mat-header-row *matHeaderRowDef="columnDef"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnDef;"></tr>
+    </table>
+
+    <div>
+      <button mat-stroked-button (click)="showNewEntityForm()">New Entity</button>
+    </div>
+
+    <ng-container *ngIf="newEntityFormShown">
+      <h3>New Entity</h3>
+
+      <form [formGroup]="newEntityForm" (ngSubmit)="putTask(true)">
+        <input matInput type="date" formControlName="planned_at" hidden>
+
+        <mat-form-field appearance="fill">
+          <mat-label>
+            <label for="description">Description</label>
+          </mat-label>
+          <textarea matInput formControlName="description" colspan=50></textarea>
+        </mat-form-field>
+
+        <div>
+          <label>Status:</label>
+          <mat-radio-group formControlName="status">
+            <mat-radio-button *ngFor="let status of statuses" [value]="status">
+              {{ convertStatus(status) }}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <div>
+          <button mat-stroked-button color="submit">Submit</button>
+        </div>
+      </form>
+    </ng-container>
+
+    <ng-container *ngIf="existEntityFormShown">
+      <h3>Exist Entity</h3>
+
+      <form [formGroup]="existEntityForm" (ngSubmit)="putTask(false)">
+        <input matInput type="number" formControlName="id" hidden>
+
+        <mat-form-field appearance="fill">
+          <mat-label>
+            <label for="description">Description</label>
+          </mat-label>
+
+          <textarea matInput formControlName="description" colspan=50></textarea>
+        </mat-form-field>
+
+        <div>
+          <label for="status">Status:</label>
+          <mat-radio-group formControlName="status" required>
+            <mat-radio-button *ngFor="let status of statuses" [value]="status">
+              {{ convertStatus(status) }}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <div>
+          <button mat-stroked-button color="submit">Submit</button>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+
+</div>
+
+<router-outlet></router-outlet>

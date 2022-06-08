@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  python:
+    build:
+      context: ./python
+    volumes:
+      - ..:/home/schedule
+      - sqlite-db:/usr/local/sqlite/data
+    ports:
+      - 5000:5000
+
+  node:
+    build:
+      context: ./node
+    volumes:
+      - ..:/home/schedule
+    ports:
+      - 3000:3000
+      - 3030:3030
+
+volumes:
+  sqlite-db:

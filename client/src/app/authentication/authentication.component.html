@@ -1,0 +1,45 @@
+<div class="authentication">
+
+  <h1>Authentication</h1>
+
+  <ng-container *ngIf="isGuest; else authenticationData">
+    <p>Enter the email and password to authenticate. Try the application with the test pairs: <b>michael/michael</b> and <b>emily/emily</b>.</p>
+
+    <form [formGroup]="form" (ngSubmit)="doAuthentication()">
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Name</mat-label>
+          <input matInput type="text" formControlName="name">
+
+          <div class="error-warning" *ngIf="form.errors?.['name'] && (form.touched || form.dirty)">
+            {{ form.errors?.['name'] }}
+          </div>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" formControlName="password">
+
+          <div class="error-warning" *ngIf="form.errors?.['password'] && (form.touched || form.dirty)">
+            {{ form.errors?.['password'] }}
+          </div>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <button mat-stroked-button color="submit">Submit</button>
+      </div>
+    </form>
+  </ng-container>
+
+  <ng-template #authenticationData>
+    <p>The current user is authenticated. You are <b>{{ userName }}</b>.</p>
+
+    <button mat-stroked-button color="submit" (click)="clearAuthenticationData()">Clear Authentication Data</button>
+  </ng-template>
+
+</div>
+
+<router-outlet></router-outlet>

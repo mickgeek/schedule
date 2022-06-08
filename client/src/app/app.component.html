@@ -1,0 +1,19 @@
+<mat-toolbar>
+  <span><a routerLink="/">Schedule</a></span>
+  <span class="toolbar-spacer"></span>
+
+  <nav>
+    <a mat-button routerLink="/authentication" routerLinkActive="mat-stroked-button">Authentication</a>
+
+    <ng-container *ngIf="isManager">
+      <a mat-button routerLink="/users" routerLinkActive="mat-stroked-button">Users</a>
+    </ng-container>
+    <ng-container *ngIf="isMember || isManager">
+      <a mat-button routerLink="/tasks" routerLinkActive="mat-stroked-button">Tasks</a>
+    </ng-container>
+  </nav>
+</mat-toolbar>
+
+<div class="wrapper">
+  <router-outlet></router-outlet>
+<div>
